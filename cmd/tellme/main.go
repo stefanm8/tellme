@@ -23,7 +23,7 @@ type OpenAIResponse struct {
 
 var openaiURI = "https://api.openai.com/v1/completions"
 
-var prompt = `\nConvert this text to a linux command\n\ntext: `
+var prompt = `\nConvert text to valid linux commands\n\ntext: `
 var endPrompt = `\ncommand: `
 
 var client = &http.Client{}
@@ -71,11 +71,11 @@ func uniqueValuesFromList(list []Choice) []string {
 	uniqueValues := make(map[string]bool)
 	lst := []string{}
 	for _, item := range list {
-		uniqueValues[item.Text] = true
+		uniqueValues[strings.Trim(strings.Trim(item.Text, "\n"), " ")] = true
 	}
 
 	for key := range uniqueValues {
-		lst = append(lst, strings.Trim(strings.Trim(key, "\n"), " "))
+		lst = append(lst, key)
 	}
 
 	return lst
@@ -96,8 +96,8 @@ func main() {
 			body := []byte(`{
 				"model": "text-davinci-002",
 				"prompt": "` + prompt + text + endPrompt + `",
-				"frequency_penalty": 0.8,
-				"temperature": 0.8,
+				"frequency_penalty": 1,
+				"temperature": 0.5,
 				"top_p": 1,
 				"n": 5,
 				"max_tokens": 250
