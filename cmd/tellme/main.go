@@ -107,7 +107,7 @@ func main() {
 			checkError(err)
 
 			// readRequestBody(req)
-			req.Header.Add("Authorization", "Bearer "+os.Getenv("TELLME_OPENAI_TOKEN"))
+			req.Header.Add("Authorization", "Bearer "+os.Getenv("TELLME_OPENAI_API_KEY"))
 			req.Header.Set("Content-Type", "application/json; charset=UTF-8")
 
 			res, err := client.Do(req)
