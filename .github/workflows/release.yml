@@ -4,7 +4,7 @@ on:
 
 name: create-release-artifacts
 env:
-  APP_PATH: go/src/github.com/stefanm8/tellme 
+  APP_PATH: /go/src/github.com/stefanm8/tellme 
 
 jobs:
   create-release:
@@ -34,11 +34,11 @@ jobs:
       - name: Build
         run: |
           cd ${{ env.APP_PATH }}
-          go build -o bin/tellme-${{matrix.platform}}-${{steps.get-version.outputs.version}} ./cmd/tellme
+          go build -o ${{env.APP_PATH}}/bin/tellme-${{matrix.platform}}-${{steps.get-version.outputs.version}} ./cmd/tellme
       
       - name: Upload release artifact
         uses: actions/upload-artifact@v2
         with:
-          name: tellme-{{matrix.platform}}-{{matrix.go-version}}
+          name: tellme-${{matrix.platform}}-${{matrix.go-version}}
           path: ${{ env.APP_PATH }}/bin/tellme-${{matrix.platform}}-${{matrix.go-version}}
   
