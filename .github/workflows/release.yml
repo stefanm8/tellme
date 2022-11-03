@@ -1,0 +1,41 @@
+on:
+  release:
+    types: [published]
+
+name: create-release-artifacts
+
+jobs:
+  create-release:
+    strategy:
+      matrix:
+        go-version: [1.19.x]
+        platform: [ubuntu-20.04, macos-latest]
+    runs-on: ${{ matrix.platform }}
+    steps:
+      - name: Set up Go ${{ env.GO_VERSION }}
+        uses: actions/setup-go@v2
+        with:
+          go-version: ${{ env.GO_VERSION }}
+
+      - name: Check out code
+        uses: actions/checkout@v2
+        with:
+          path: go/src/github.com/stefanm8/tellme
+          fetch-depth: 0
+
+      - name: Get Version
+        id: get-version
+        run: |
+          version=$(echo "${{ github.ref }}" | awk -F "/" '{print $NF}' | cut -c2-)
+          echo "::set-output name=version::$version" 
+
+      - name: Build
+        run: |
+          go build -o tellme-${{matrix.platform}}-${{steps.get-version.outputs.version}} ./cmd/tellme
+      
+      - name: Upload release artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: tellme-{{matrix.platform}}-{{matrix.go-version}}
+          path: tellme-{{matrix.platform}}-{{matrix.go-version}}
+  
