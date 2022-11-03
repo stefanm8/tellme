@@ -3,6 +3,8 @@ on:
     types: [published]
 
 name: create-release-artifacts
+env:
+  APP_PATH: go/src/github.com/stefanm8/tellme 
 
 jobs:
   create-release:
@@ -20,7 +22,7 @@ jobs:
       - name: Check out code
         uses: actions/checkout@v2
         with:
-          path: go/src/github.com/stefanm8/tellme
+          path: ${{ env.APP_PATH }}
           fetch-depth: 0
 
       - name: Get Version
@@ -31,11 +33,12 @@ jobs:
 
       - name: Build
         run: |
-          go build -o tellme-${{matrix.platform}}-${{steps.get-version.outputs.version}} ./cmd/tellme
+          cd ${{ env.APP_PATH }}
+          go build -o bin/tellme-${{matrix.platform}}-${{steps.get-version.outputs.version}} ./cmd/tellme
       
       - name: Upload release artifact
         uses: actions/upload-artifact@v2
         with:
           name: tellme-{{matrix.platform}}-{{matrix.go-version}}
-          path: tellme-{{matrix.platform}}-{{matrix.go-version}}
+          path: ${{ env.APP_PATH }}/bin/tellme-{{matrix.platform}}-{{matrix.go-version}}
   
