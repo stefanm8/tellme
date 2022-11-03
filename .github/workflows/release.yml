@@ -40,5 +40,5 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: tellme-{{matrix.platform}}-{{matrix.go-version}}
-          path: ${{ env.APP_PATH }}/bin/tellme-{{matrix.platform}}-{{matrix.go-version}}
+          path: ${{ env.APP_PATH }}/bin/tellme-${{matrix.platform}}-${{matrix.go-version}}
   
